@@ -33,6 +33,8 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   onHeartPressed() {
+    final now = DateTime.now();
+
     showCupertinoDialog(
       context: context,
       barrierDismissible: true,
@@ -71,30 +73,28 @@ class _TopPart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final textTheme = theme.textTheme;
     final now = DateTime.now();
 
     return Expanded(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          Text('U&I',
-              style: TextStyle(
-                  color: Colors.white,
-                  fontFamily: 'parisienne',
-                  fontSize: 80.0)),
+          Text(
+            'U&I',
+            style: textTheme.headline1,
+          ),
           Column(
             children: [
-              Text('우리 처음 만난 날',
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontFamily: 'sunflower',
-                      fontSize: 30.0)),
               Text(
-                  '${selectedDate.year}.${selectedDate.month}.${selectedDate.day}',
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontFamily: 'sunflower',
-                      fontSize: 20.0)),
+                '우리 처음 만난 날',
+                style: textTheme.bodyText1,
+              ),
+              Text(
+                '${selectedDate.year}.${selectedDate.month}.${selectedDate.day}',
+                style: textTheme.bodyText2,
+              ),
             ],
           ),
           IconButton(
@@ -105,12 +105,9 @@ class _TopPart extends StatelessWidget {
                 size: 50.0,
               )),
           Text(
-              'D-${DateTime(now.year, now.month, now.day).difference(selectedDate).inDays + 1}',
-              style: TextStyle(
-                  color: Colors.white,
-                  fontFamily: 'sunflower',
-                  fontWeight: FontWeight.w700,
-                  fontSize: 40.0))
+            'D-${DateTime(now.year, now.month, now.day).difference(selectedDate).inDays + 1}',
+            style: textTheme.headline2,
+          )
         ],
       ),
     );
