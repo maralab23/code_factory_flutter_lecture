@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:random_number_generator/constant/Color.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -11,37 +12,64 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('랜덤숫자 생성기'),
-                IconButton(
-                  onPressed: () {},
-                  icon: const Icon(Icons.settings),
-                ),
-              ],
-            ),
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+      backgroundColor: PRIMARY_COLOR,
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        child: SafeArea(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('123'),
-                  Text('456'),
-                  Text('789'),
+                  const Text(
+                    '랜덤숫자 생성기',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 30.0,
+                        fontWeight: FontWeight.w700),
+                  ),
+                  IconButton(
+                    onPressed: () {},
+                    icon: const Icon(
+                      Icons.settings,
+                      color: RED_COLOR,
+                    ),
+                  ),
                 ],
               ),
-            ),
-            SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () {},
-                  child: Text('생성하기!'),
-                )),
-          ],
+              Expanded(
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      123,
+                      456,
+                      789,
+                    ]
+                        .map(
+                          (x) => Row(
+                            children: x
+                                .toString()
+                                .split('')
+                                .map((y) => Image.asset(
+                                      'asset/img/$y.png',
+                                      height: 70.0,
+                                      width: 50.0,
+                                    ))
+                                .toList(),
+                          ),
+                        )
+                        .toList()),
+              ),
+              SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(backgroundColor: RED_COLOR),
+                    onPressed: () {},
+                    child: Text('생성하기!'),
+                  )),
+            ],
+          ),
         ),
       ),
     );
