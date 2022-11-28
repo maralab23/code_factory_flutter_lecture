@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:random_number_generator/component/number_row.dart';
 import 'package:random_number_generator/constant/Color.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -66,20 +67,7 @@ class _Body extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: Row(
-        children: maxNumber
-            .toInt()
-            .toString()
-            .split('')
-            .map(
-              (e) => Image.asset(
-                'asset/img/$e.png',
-                height: 70.0,
-                width: 50.0,
-              ),
-            )
-            .toList(),
-      ),
+      child: NumberRow(number: maxNumber.toInt()),
     );
   }
 }
