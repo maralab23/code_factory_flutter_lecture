@@ -21,6 +21,18 @@ class RouteOneScreen extends StatelessWidget {
         ),
         ElevatedButton(
           onPressed: () {
+            print(Navigator.canPop(context));
+          },
+          child: Text('Can Pop'),
+        ),
+        ElevatedButton(
+          onPressed: () {
+            Navigator.maybePop(context);
+          },
+          child: Text('Maybe Pop'),
+        ),
+        ElevatedButton(
+          onPressed: () {
             Navigator.of(context).pop(456);
           },
           child: Text('Pop'),
