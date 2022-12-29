@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -76,17 +77,21 @@ class _CustomVideoPlayerState extends State<CustomVideoPlayer> {
   }
 
   void onPlayPressed() {
-
+    // 이미 실행중이면 중지
+    // 실행중이 아니면 실행
+    setState(() {
+      if (videoPlayerController!.value.isPlaying) {
+        log('pause');
+        videoPlayerController!.pause();
+      } else {
+        log('play');
+        videoPlayerController!.play();
+      }
+    });
   }
 
   void onForwardPressed() {
-    // 이미 실행중이면 중지
-    // 실행중이 아니면 실행
-    if (videoPlayerController!.value.isPlaying) {
-      videoPlayerController!.pause();
-    } else {
-      videoPlayerController!.play();
-    }
+
   }
 
 }
