@@ -19,6 +19,7 @@ class CustomVideoPlayer extends StatefulWidget {
 
 class _CustomVideoPlayerState extends State<CustomVideoPlayer> {
   VideoPlayerController? videoPlayerController;
+  Duration currentPosition = Duration();
 
   @override
   void initState() {
@@ -33,6 +34,12 @@ class _CustomVideoPlayerState extends State<CustomVideoPlayer> {
     );
 
     await videoPlayerController!.initialize();
+
+    videoPlayerController!.addListener(() async {
+      setState(() {
+        this.currentPosition = videoPlayerController!.value.position;
+      });
+    });
 
     setState(() {});
   }
@@ -56,16 +63,13 @@ class _CustomVideoPlayerState extends State<CustomVideoPlayer> {
             onForwardPressed: onForwardPressed,
             isPlaying: videoPlayerController!.value.isPlaying,
           ),
-          Positioned(
-            right: 0.0,
-            child: IconButton(
-              onPressed: () {},
-              color: Colors.white,
-              iconSize: 30.0,
-              icon: Icon(
-                Icons.photo_camera_back,
-              ),
-            ),
+          _NewVideo(
+            onPressed: onNewVideoPressed,
+          ),
+          _SliderBottom(
+            currentPosition: currentPosition,
+            maxPosition: videoPlayerController!.value.duration,
+            onSliderChanged: onSliderChanged,
           ),
         ],
       ),
@@ -73,7 +77,12 @@ class _CustomVideoPlayerState extends State<CustomVideoPlayer> {
   }
 
   void onReversePressed() {
-
+    final currentPosition = videoPlayerController!.value.position;
+    Duration newPosition = Duration();
+    if (currentPosition.inSeconds > 3) {
+      newPosition = currentPosition - Duration(seconds: 3);
+    }
+    videoPlayerController!.seekTo(newPosition);
   }
 
   void onPlayPressed() {
@@ -81,19 +90,31 @@ class _CustomVideoPlayerState extends State<CustomVideoPlayer> {
     // 실행중이 아니면 실행
     setState(() {
       if (videoPlayerController!.value.isPlaying) {
-        log('pause');
         videoPlayerController!.pause();
       } else {
-        log('play');
         videoPlayerController!.play();
       }
     });
   }
 
   void onForwardPressed() {
-
+    final maxPosition = videoPlayerController!.value.duration;
+    final currentPosition = videoPlayerController!.value.position;
+    Duration newPosition = maxPosition;
+    if ((maxPosition - Duration(seconds: 3)).inSeconds >
+        currentPosition.inSeconds) {
+      newPosition = currentPosition + Duration(seconds: 3);
+    }
+    videoPlayerController!.seekTo(newPosition);
   }
 
+  void onNewVideoPressed() {}
+
+  void onSliderChanged(double val) {
+    videoPlayerController!.seekTo(
+      Duration(seconds: val.toInt()),
+    );
+  }
 }
 
 class _Controls extends StatelessWidget {
@@ -145,6 +166,79 @@ class _Controls extends StatelessWidget {
       color: Colors.white,
       icon: Icon(
         iconData,
+      ),
+    );
+  }
+}
+
+class _NewVideo extends StatelessWidget {
+  final VoidCallback onPressed;
+
+  const _NewVideo({
+    required this.onPressed,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Positioned(
+      right: 0.0,
+      child: IconButton(
+        onPressed: onPressed,
+        color: Colors.white,
+        iconSize: 30.0,
+        icon: Icon(
+          Icons.photo_camera_back,
+        ),
+      ),
+    );
+  }
+}
+
+class _SliderBottom extends StatelessWidget {
+  final Duration currentPosition;
+  final Duration maxPosition;
+  final ValueChanged<double> onSliderChanged;
+
+  const _SliderBottom({
+    required this.currentPosition,
+    required this.maxPosition,
+    required this.onSliderChanged,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Positioned(
+      bottom: 0,
+      left: 0,
+      right: 0,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        child: Row(
+          children: [
+            Text(
+              '${currentPosition.inMinutes.toString().padLeft(2, '0')}:${(currentPosition.inSeconds % 60).toString().padLeft(2, '0')}',
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+            Expanded(
+              child: Slider(
+                max: maxPosition.inSeconds.toDouble(),
+                min: 0,
+                value: currentPosition.inSeconds.toDouble(),
+                onChanged: onSliderChanged,
+              ),
+            ),
+            Text(
+              '${maxPosition.inMinutes.toString().padLeft(2, '0')}:${(maxPosition.inSeconds % 60).toString().padLeft(2, '0')}',
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
